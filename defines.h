@@ -1,0 +1,6 @@
+#ifndef STRINGFUNCTION_DEFINES
+#define STRINGFUNCTION_DEFINES
+typedef mystr *char;
+
+
+#endif // STRINGFUNCTION_DEFINES

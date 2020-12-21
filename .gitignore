@@ -3,3 +3,4 @@ test.cpp
 bin/
 obj/
 StringFunctions.depend
+*.layout

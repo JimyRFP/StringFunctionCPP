@@ -5,6 +5,7 @@ class c_StringFunctions{
     c_StringFunctions();
     //WORKFUNCTION
     bool clearSpecificString(const mystr);
+    size_t getQueryParams(const mystr,urlQuery**);
     //GETFUNCTIONS
     mystr getString();
     int getStringLen()const{return getStringLen(m_string);};
@@ -12,7 +13,9 @@ class c_StringFunctions{
     STRINGFUNCTION_LASTERRO getLastErro()const{return m_lasterro;}
     //SETFUNCTION
     bool setString(const mystr);
-
+    //ADDSTRING
+    int strAdd(mystr*,const mystr,const int,const int);
+    mystr copyStr(const mystr)const;
   private:
    //OBJECTS
    mystr m_string;
@@ -25,6 +28,13 @@ class c_StringFunctions{
 
      //SETINGSFUNCTION
      mystr allocStringMemory(int size);
+     mystr reallocStringMemory(mystr,int size);
+     void  zeroUrlQueryStruct(urlQuery* stru){
+      stru->param=NULL;
+      stru->size_param=0;
+      stru->size_value=0;
+      stru->value=NULL;
+     }
 };
 
 //CONSTRUCTOR

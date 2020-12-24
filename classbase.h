@@ -6,6 +6,9 @@ class c_StringFunctions{
     //WORKFUNCTION
     bool clearSpecificString(const mystr);
     size_t getQueryParams(const mystr,urlQuery**);
+    int searchString(const mystr,const mystr sea,int size);
+    mystr integer2String(const int);
+    bool strInvert(mystr*);
     //GETFUNCTIONS
     mystr getString();
     int getStringLen()const{return getStringLen(m_string);};
@@ -25,7 +28,7 @@ class c_StringFunctions{
      void setLastErro(STRINGFUNCTION_LASTERRO lasterro){m_lasterro=lasterro;}
      void resetLastErro(){m_lasterro=STRINGFUNCTION_LASTERRO_NOERRO;}
      //GETFUNCTION
-
+     char getNumberAsc2(const int);
      //SETINGSFUNCTION
      mystr allocStringMemory(int size);
      mystr reallocStringMemory(mystr,int size);

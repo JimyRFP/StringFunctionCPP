@@ -12,9 +12,13 @@
 #include "getQueryParams.h"
 #include "strAdd.h"
 #include "copyStr.h"
+#include "searchString.h"
+#include "integer2String.h"
+#include "strInvert.h"
 //PRIVATE FUNCTION
 #include "alocStringMemory.h"
 #include "realocStringMemory.h"
+#include "getNumberAsc2.h"
 #endif // STRINGFUNCTIONS
 
 

@@ -9,6 +9,7 @@ class c_StringFunctions{
     int searchString(const mystr,const mystr sea,int size);
     mystr integer2String(const int);
     bool strInvert(mystr*);
+    bool strCompare(const mystr,const mystr,const int len);
     //GETFUNCTIONS
     mystr getString();
     int getStringLen()const{return getStringLen(m_string);};

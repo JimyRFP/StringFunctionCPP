@@ -15,6 +15,7 @@
 #include "searchString.h"
 #include "integer2String.h"
 #include "strInvert.h"
+#include "strCompare.h"
 //PRIVATE FUNCTION
 #include "alocStringMemory.h"
 #include "realocStringMemory.h"

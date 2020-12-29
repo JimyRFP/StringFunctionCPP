@@ -4,7 +4,7 @@
 #include "classbase.h"
 
 //PUBLIC FUNCTION
-
+#include "functions.cpp"
 #include "getString.h"
 #include "getStringLen.h"
 #include "setString.h"

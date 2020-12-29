@@ -5,6 +5,10 @@
 typedef char* mystr;
 #define STRINGIND_ERRO -1
 #define STRING_END 0
+#define STRING_SPACE ' '
+#define STRING_TAB  '   '
+#define STRING_ENDL '\n'
+
 #define STRING_QUERY_INITPARAMS 63
 #define STRING_GET_INITVALUE 61
 #define STRING_GET_CLOSEVALUE 38

@@ -10,6 +10,10 @@ class c_StringFunctions{
     mystr integer2String(const int);
     bool strInvert(mystr*);
     bool strCompare(const mystr,const mystr,const int len);
+    mystr trim(const mystr);
+    mystr trimFree(const mystr);
+    mystr clearLeft(const mystr,const mystr);
+    mystr clearRight(const mystr,const mystr);
     //GETFUNCTIONS
     mystr getString();
     int getStringLen()const{return getStringLen(m_string);};

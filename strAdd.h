@@ -18,6 +18,7 @@ int c_StringFunctions::strAdd(mystr* dst,const mystr src,int init=0,int size=-1)
    newStr[oldLen+i]=src[i+b_init];
   }
   newStr[oldLen+len]=STRING_END;
+  if(*dst!=NULL)free(*dst);
   *dst=newStr;
   return oldLen+len;
 }

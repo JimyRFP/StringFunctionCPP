@@ -6,6 +6,7 @@ class c_StringFunctions{
     //WORKFUNCTION
     bool clearSpecificString(const mystr);
     size_t getQueryParams(const mystr,urlQuery**);
+    mystr getUrlWithoutParams(const mystr);
     int searchString(const mystr,const mystr sea,int size);
     mystr integer2String(const int);
     bool strInvert(mystr*);
@@ -14,6 +15,7 @@ class c_StringFunctions{
     mystr trimFree(const mystr);
     mystr clearLeft(const mystr,const mystr);
     mystr clearRight(const mystr,const mystr);
+    mystr strCut(const mystr,const int size);
     //GETFUNCTIONS
     mystr getString();
     int getStringLen()const{return getStringLen(m_string);};

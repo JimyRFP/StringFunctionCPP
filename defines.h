@@ -28,5 +28,16 @@ typedef struct STRINGFUNCTION_QUERY{
  size_t size_value;
 }urlQuery;
 
+typedef struct fc_csv_info{
+ mystr *lineInfo;
+ size_t size;
+ fc_csv_info* next;
+}csvInfo;
+
+enum ENUM_CSVSTRUCT_ADD{
+  CSVSTRUCT_ADD_LINEDATA,
+  CSVSTRUCT_ADD_NEWLINE,
+};
+
 #endif // STRINGFUNCTIONS_DEFINES
 

@@ -16,6 +16,13 @@ class c_StringFunctions{
     mystr clearLeft(const mystr,const mystr);
     mystr clearRight(const mystr,const mystr);
     mystr strCut(const mystr,const int size);
+    mystr strCutFree(const mystr,const int size);
+    csvInfo* strToCsvStruct(const mystr,const char,const char);
+    void zeroCsvStruct(csvInfo*);
+    mystr csvStructToStr(const csvInfo*,const char,const char);
+    void freeCsvStruct(csvInfo**);
+    csvInfo* csvStructAdd(ENUM_CSVSTRUCT_ADD,csvInfo*,void *);
+    csvInfo* csvCreateStruct();
     //GETFUNCTIONS
     mystr getString();
     int getStringLen()const{return getStringLen(m_string);};

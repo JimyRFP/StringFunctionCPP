@@ -24,8 +24,7 @@ typedef enum ENUM_STRINGFUNCTION_LASTERRO{
 typedef struct STRINGFUNCTION_QUERY{
  mystr param;
  mystr value;
- size_t size_param;
- size_t size_value;
+ STRINGFUNCTION_QUERY*next;
 }urlQuery;
 
 typedef struct fc_csv_info{

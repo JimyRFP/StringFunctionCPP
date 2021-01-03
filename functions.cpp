@@ -157,9 +157,18 @@ mystr c_StringFunctions::csvStructToStr(const csvInfo*info,const char itemLineBr
 }
 
 void c_StringFunctions::freeCsvStruct(csvInfo**info){
-  csvInfo *base=*info;
+  csvInfo *next,*base=*info;
   *info=NULL;
-  free(base);
+  while(base!=NULL){
+    for(size_t i=0;i<base->size;i++){
+        free(base->lineInfo[i]);
+        base->lineInfo[i]=NULL;
+    }
+    free(base->lineInfo);
+    next=base->next;
+    free(base);
+    base=next;
+  }
 }
 
 csvInfo* c_StringFunctions::csvStructAdd(ENUM_CSVSTRUCT_ADD addInfo,csvInfo* strRef,void *addData){
@@ -169,9 +178,9 @@ csvInfo* c_StringFunctions::csvStructAdd(ENUM_CSVSTRUCT_ADD addInfo,csvInfo* str
   case CSVSTRUCT_ADD_LINEDATA:
     ret=strRef;
     if(strRef->size<1){
-      strRef->lineInfo=(mystr*)malloc(sizeof(mystr));
+      strRef->lineInfo=(mystr*)malloc(sizeof(mystr*));
     }else{
-      strRef->lineInfo=(mystr*)realloc(strRef->lineInfo,(strRef->size+1)*sizeof(mystr));
+      strRef->lineInfo=(mystr*)realloc(strRef->lineInfo,(strRef->size+1)*sizeof(mystr*));
     }
     if(strRef->lineInfo==NULL)return NULL;
     strRef->lineInfo[strRef->size]=(mystr)addData;
@@ -193,5 +202,27 @@ csvInfo* c_StringFunctions::csvCreateStruct(){
  csvInfo *ret=NULL;
  ret=(csvInfo*)malloc(sizeof(csvInfo));
  zeroCsvStruct(ret);
+ return ret;
+}
+
+
+csvInfo* c_StringFunctions::csvCopyStruct(const csvInfo*base){
+ if(base==NULL)return NULL;
+ csvInfo*ret=csvCreateStruct();
+ if(ret==NULL)return NULL;
+ ret->lineInfo=base->lineInfo;
+ ret->next=base->next;
+ ret->size=base->size;
+ return ret;
+}
+
+mystr* c_StringFunctions::copyStrArray(const mystr*base,const int size){
+ mystr *ret=NULL;
+ if(base==NULL)return NULL;
+ if(size<1)return NULL;
+ ret=(mystr*)malloc(size*sizeof(mystr*));
+ for(int i=0;i<size;i++){
+  ret[i]=copyStr(base[i]);
+ }
  return ret;
 }

@@ -5,7 +5,8 @@ class c_StringFunctions{
     c_StringFunctions();
     //WORKFUNCTION
     bool clearSpecificString(const mystr);
-    size_t getQueryParams(const mystr,urlQuery**);
+    urlQuery* getQueryParams(const mystr);
+    void freeUrlQuery(urlQuery*);
     mystr getUrlWithoutParams(const mystr);
     int searchString(const mystr,const mystr sea,int size);
     mystr integer2String(const int);
@@ -23,6 +24,12 @@ class c_StringFunctions{
     void freeCsvStruct(csvInfo**);
     csvInfo* csvStructAdd(ENUM_CSVSTRUCT_ADD,csvInfo*,void *);
     csvInfo* csvCreateStruct();
+    csvInfo* csvCopyStruct(const csvInfo*);
+    void freeStr(mystr*str){
+      free(*str);
+      *str=NULL;
+    }
+    mystr* copyStrArray(const mystr*,const int);
     //GETFUNCTIONS
     mystr getString();
     int getStringLen()const{return getStringLen(m_string);};
@@ -48,10 +55,10 @@ class c_StringFunctions{
      mystr reallocStringMemory(mystr,int size);
      void  zeroUrlQueryStruct(urlQuery* stru){
       stru->param=NULL;
-      stru->size_param=0;
-      stru->size_value=0;
       stru->value=NULL;
+      stru->next=NULL;
      }
+     urlQuery* createUrlQuery();
 };
 
 //CONSTRUCTOR

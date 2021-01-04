@@ -29,6 +29,7 @@ class c_StringFunctions{
       free(*str);
       *str=NULL;
     }
+    void freeStrArray(mystr**str,const int);
     mystr* copyStrArray(const mystr*,const int);
     //GETFUNCTIONS
     mystr getString();
@@ -38,8 +39,9 @@ class c_StringFunctions{
     //SETFUNCTION
     bool setString(const mystr);
     //ADDSTRING
-    int strAdd(mystr*,const mystr,const int,const int);
-    mystr copyStr(const mystr)const;
+    //int strAdd(mystr*,const mystr,const int,const int);
+    int strAdd(mystr*,const mystr,const int);
+    mystr copyStr(const mystr,int*)const;
   private:
    //OBJECTS
    mystr m_string;

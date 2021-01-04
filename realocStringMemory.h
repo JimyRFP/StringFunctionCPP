@@ -4,16 +4,9 @@
 #include <stdlib.h>
 
 mystr c_StringFunctions::reallocStringMemory(mystr str,int size){
-  mystr returnValue;
-  if(str!=NULL){
+    mystr returnValue;
     returnValue=(mystr)realloc(str,size);
-  }else{
-    returnValue=(mystr)malloc(size*sizeof(char));
-  }
-  if(returnValue==NULL){
-    setLastErro(STRINGFUNCTION_LASTERRO_MALLOCERROR);
-  }
-  return returnValue;
+    return returnValue;
 }
 
 #endif // STRINGFUNCTIONS_geString

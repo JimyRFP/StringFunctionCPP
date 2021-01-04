@@ -5,9 +5,9 @@
 
 
 int c_StringFunctions::getStringLen(mystr str)const{
-    size_t ind=0;
+    int ind=0;
     if(str==NULL)
-      return STRINGIND_ERRO;
+      return 0;
     while(str[ind]!=STRING_END){
       ind++;
     }

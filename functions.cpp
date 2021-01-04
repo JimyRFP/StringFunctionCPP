@@ -15,59 +15,61 @@ mystr c_StringFunctions::trimFree(const mystr strC){
 }
 
 mystr c_StringFunctions::clearLeft(const mystr toClc,const mystr clcAlg){
- const int baseLen=getStringLen(toClc);
- const int clcLen=getStringLen(clcAlg);
-
  int firstIndOk;
- for(int i=0;i<baseLen;i++){
+ int j,i=0;
+ while(toClc[i]!=STRING_END){
   firstIndOk=i;
-  for(int j=0;j<clcLen;j++){
+  j=0;
+  while(clcAlg[j]!=STRING_END){
    if(clcAlg[j]==toClc[i]){
     firstIndOk=-1;
     break;
    }
+   j++;
   }
+  i++;
   if(firstIndOk>-1)break;
  }
- if(firstIndOk==-1)return NULL;
+ if(firstIndOk<0)return NULL;
  mystr ret=NULL;
- strAdd(&ret,toClc,firstIndOk,-1);
+ strAdd(&ret,&toClc[firstIndOk],-1);
  return ret;
 }
 
 mystr c_StringFunctions::clearRight(const mystr toClc,const mystr clcAlg){
  const int baseLen=getStringLen(toClc);
- const int clcLen=getStringLen(clcAlg);
 
  int firstIndOk;
+ int j;
  for(int i=baseLen-1;i>=0;i--){
   firstIndOk=i;
-  for(int j=0;j<clcLen;j++){
+  j=0;
+  while(clcAlg[j]!=STRING_END){
    if(clcAlg[j]==toClc[i]){
     firstIndOk=-1;
     break;
    }
+   j++;
   }
   if(firstIndOk>-1)break;
  }
- if(firstIndOk==-1)return NULL;
+ if(firstIndOk<0)return NULL;
  mystr ret=NULL;
- strAdd(&ret,toClc,0,firstIndOk+1);
+ strAdd(&ret,toClc,firstIndOk+1);
  return ret;
 
   return NULL;
 }
 
 mystr c_StringFunctions::getUrlWithoutParams(const mystr url){
- const int len=getStringLen(url);
- if(len<1)return NULL;
- int i;
- for(i=0;i<len;i++){
+  int i=0;
+  while(url[i]!=STRING_END){
     if(url[i]==STRING_QUERY_INITPARAMS)break;
- }
- mystr ret=NULL;
- strAdd(&ret,url,0,i);
- return ret;
+    i++;
+  }
+  mystr ret=NULL;
+  strAdd(&ret,url,i);
+  return ret;
 }
 
 mystr c_StringFunctions::strCut(const mystr base,const int size){
@@ -86,7 +88,7 @@ mystr c_StringFunctions::strCut(const mystr base,const int size){
  if(end<=0)return NULL;
 
  mystr ret=NULL;
- strAdd(&ret,base,begin,end);
+ strAdd(&ret,&base[begin],end);
  return ret;
 }
 
@@ -98,8 +100,7 @@ mystr c_StringFunctions::strCutFree(const mystr base,const int size){
 }
 
 csvInfo* c_StringFunctions::strToCsvStruct(const mystr data,const char itemLineBreak,const char lineBreak){
- csvInfo *use,*ref=(csvInfo*)malloc(sizeof(csvInfo));
- zeroCsvStruct(ref);
+ csvInfo *use,*ref=csvCreateStruct();
  use=ref;
  mystr tempVal;
  int initInd,i=0;
@@ -109,10 +110,10 @@ csvInfo* c_StringFunctions::strToCsvStruct(const mystr data,const char itemLineB
    initInd=i;
    while(data[i]!=itemLineBreak && data[i]!=lineBreak && data[i]!=STRING_END)i++;
    if(i-initInd>0)
-    strAdd(&tempVal,(mystr)&data[initInd],0,i-initInd);
+    strAdd(&tempVal,(mystr)&data[initInd],i-initInd);
    if(tempVal!=NULL){
      if(use->size<1){
-      use->lineInfo=(mystr*)malloc(sizeof(mystr));
+      use->lineInfo=(mystr*)malloc(sizeof(mystr*));
      }else{
       use->lineInfo=(mystr*)realloc(use->lineInfo,(use->size+1)*sizeof(mystr));
      }
@@ -121,12 +122,11 @@ csvInfo* c_StringFunctions::strToCsvStruct(const mystr data,const char itemLineB
      use->size++;
    }
    if(data[i]==lineBreak){
-    use->next=(csvInfo*)malloc(sizeof(csvInfo));
+    use->next=csvCreateStruct();
     if(use->next==NULL){
-      free(ref);
+      freeCsvStruct(&ref);
       return NULL;
     }
-    zeroCsvStruct(use->next);
     use=use->next;
    }
    if(data[i]==STRING_END)break;
@@ -146,11 +146,11 @@ mystr c_StringFunctions::csvStructToStr(const csvInfo*info,const char itemLineBr
  csvInfo *ref=(csvInfo*)info;
  while(ref!=NULL){
    for(size_t i=0;i<ref->size;i++){
-     strAdd((mystr*)&ret,ref->lineInfo[i],0,-1);
-     strAdd((mystr*)&ret,(mystr)&itemLineBreak,0,1);
+     strAdd((mystr*)&ret,ref->lineInfo[i],-1);
+     strAdd((mystr*)&ret,(mystr)&itemLineBreak,1);
    }
    ret=strCutFree(ret,1);
-   strAdd(&ret,(mystr)&lineBreak,0,1);
+   strAdd(&ret,(mystr)&lineBreak,1);
    ref=ref->next;
  }
  return ret;
@@ -178,9 +178,9 @@ csvInfo* c_StringFunctions::csvStructAdd(ENUM_CSVSTRUCT_ADD addInfo,csvInfo* str
   case CSVSTRUCT_ADD_LINEDATA:
     ret=strRef;
     if(strRef->size<1){
-      strRef->lineInfo=(mystr*)malloc(sizeof(mystr*));
+      strRef->lineInfo=(mystr*)malloc(sizeof(mystr));
     }else{
-      strRef->lineInfo=(mystr*)realloc(strRef->lineInfo,(strRef->size+1)*sizeof(mystr*));
+      strRef->lineInfo=(mystr*)realloc(strRef->lineInfo,(strRef->size+1)*sizeof(mystr));
     }
     if(strRef->lineInfo==NULL)return NULL;
     strRef->lineInfo[strRef->size]=(mystr)addData;
@@ -210,7 +210,7 @@ csvInfo* c_StringFunctions::csvCopyStruct(const csvInfo*base){
  if(base==NULL)return NULL;
  csvInfo*ret=csvCreateStruct();
  if(ret==NULL)return NULL;
- ret->lineInfo=base->lineInfo;
+ ret->lineInfo=copyStrArray(base->lineInfo,base->size);
  ret->next=base->next;
  ret->size=base->size;
  return ret;
@@ -222,7 +222,16 @@ mystr* c_StringFunctions::copyStrArray(const mystr*base,const int size){
  if(size<1)return NULL;
  ret=(mystr*)malloc(size*sizeof(mystr*));
  for(int i=0;i<size;i++){
-  ret[i]=copyStr(base[i]);
+  ret[i]=copyStr(base[i],NULL);
  }
  return ret;
+}
+
+void c_StringFunctions::freeStrArray(mystr **str,const int size){
+ if(*str==NULL)return;
+ for(int i=0;i<size;i++){
+   free((*str)[i]);
+ }
+ free(*str);
+ *str=NULL;
 }

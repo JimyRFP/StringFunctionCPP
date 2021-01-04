@@ -24,12 +24,12 @@ urlQuery* c_StringFunctions::getQueryParams(const mystr str){
    initInd=str_ind;
    while(str[str_ind]!=STRING_GET_INITVALUE && str[str_ind]!=STRING_END)str_ind++;
      if(str_ind-initInd>0)
-     strAdd(&current->param,&str[initInd],0,str_ind-initInd);
+     strAdd(&current->param,&str[initInd],str_ind-initInd);
      if(str[str_ind]==STRING_END)break;
      str_ind++;
      initInd=str_ind;
    while(str[str_ind]!=STRING_GET_CLOSEVALUE && str[str_ind]!=STRING_END)str_ind++;
-     strAdd(&current->value,&str[initInd],0,str_ind-initInd);
+     strAdd(&current->value,&str[initInd],str_ind-initInd);
      if(str[str_ind]==STRING_END)break;
      str_ind++;
      if(str[str_ind]==STRING_END)break;

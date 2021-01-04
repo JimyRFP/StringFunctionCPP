@@ -13,10 +13,10 @@ mystr c_StringFunctions::integer2String(const int ind){
   base-=rest;
   base/=10;
   asc2Char=rest+48;
-  strAdd(&ret,&asc2Char,0,1);
+  strAdd(&ret,(mystr)&asc2Char,1);
  }while(base!=0);
  if(isNegative){
-    strAdd(&ret,(mystr)"-",0,1);
+    strAdd(&ret,(mystr)"-",1);
  }
  strInvert(&ret);
  return ret;

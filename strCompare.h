@@ -1,20 +1,25 @@
 #ifndef STRINGFUNCTIONS_STRCOMPARE
 #define STRINGFUNCTIONS_STRCOMPARE
-bool c_StringFunctions::strCompare(const mystr str1,const mystr str2,const int len=-1){
-  const int len1=getStringLen(str1);
-  const int len2=getStringLen(str2);
-  int verLen;
-  if(len>0){
-    if(len1<len || len2<len)return false;
-    verLen=len;
-  }else{
-    if(len1!=len2 || len1<1)return false;
-    verLen=len1;
-  }
-  for(int i=0;i<verLen;i++){
+bool c_StringFunctions::strCompare(const mystr str1,const mystr str2){
+  if(str1==NULL || str2==NULL)return false;
+  int i=0;
+  while(str1[i]!=STRING_END && str2[i]!=STRING_END){
     if(str1[i]!=str2[i])return false;
+    i++;
   }
-  return true;
+  if(str1[i]==STRING_END && str2[i]==STRING_END)return true;
+  return false;
 }
 
+bool c_StringFunctions::strCompare(const mystr str1,const mystr str2,const int len){
+  if(str1==NULL || str2==NULL)return false;
+  int i=0;
+  while(str1[i]!=STRING_END && str2[i]!=STRING_END){
+    if(str1[i]!=str2[i])return false;
+    i++;
+    if(i==len)return true;
+  }
+  if(str1[i]==STRING_END && str2[i]==STRING_END)return true;
+  return false;
+}
 #endif

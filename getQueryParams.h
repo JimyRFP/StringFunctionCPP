@@ -60,4 +60,11 @@ urlQuery* c_StringFunctions::createUrlQuery(){
  return ret;
 }
 
+
+ void  c_StringFunctions::zeroUrlQueryStruct(urlQuery* stru){
+      stru->param=NULL;
+      stru->value=NULL;
+      stru->next=NULL;
+}
+
 #endif

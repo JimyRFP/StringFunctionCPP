@@ -17,162 +17,168 @@ mystr c_StringFunctions::trimFree(const mystr strToTrim){
 }
 
 mystr c_StringFunctions::clearLeft(const mystr strToClear,const mystr charsToTake){
- int firstIndOk;
+ if(strToClear==NULL || charsToTake==NULL)return NULL;
+ int firstValidInd=-1;
  int j,i=0;
  while(strToClear[i]!=STRING_END){
-  firstIndOk=i;
+  firstValidInd=i;
   j=0;
   while(charsToTake[j]!=STRING_END){
    if(charsToTake[j]==strToClear[i]){
-    firstIndOk=-1;
+    firstValidInd=-1;
     break;
    }
    j++;
   }
   i++;
-  if(firstIndOk>-1)break;
+  if(firstValidInd>-1)break;
  }
- if(firstIndOk<0)return NULL;
- mystr ret=NULL;
- strAdd(&ret,&strToClear[firstIndOk],-1);
- return ret;
+ if(firstValidInd<0)return NULL;
+ mystr returnRef=NULL;
+ strAdd(&returnRef,&strToClear[firstValidInd],-1);
+ return returnRef;
 }
 
-mystr c_StringFunctions::clearRight(const mystr toClc,const mystr clcAlg){
- const int baseLen=getStringLen(toClc);
-
- int firstIndOk;
+mystr c_StringFunctions::clearRight(const mystr strToClear,const mystr charsToTake){
+ if(strToClear==NULL || charsToTake==NULL)return NULL;
+ const int strToClearLen=getStringLen(strToClear);
+ int lastValidInd=-1;
  int j;
- for(int i=baseLen-1;i>=0;i--){
-  firstIndOk=i;
+ for(int i=strToClearLen-1;i>=0;i--){
+  lastValidInd=i;
   j=0;
-  while(clcAlg[j]!=STRING_END){
-   if(clcAlg[j]==toClc[i]){
-    firstIndOk=-1;
+  while(charsToTake[j]!=STRING_END){
+   if(charsToTake[j]==strToClear[i]){
+    lastValidInd=-1;
     break;
    }
    j++;
   }
-  if(firstIndOk>-1)break;
+  if(lastValidInd>-1)break;
  }
- if(firstIndOk<0)return NULL;
- mystr ret=NULL;
- strAdd(&ret,toClc,firstIndOk+1);
- return ret;
-
-  return NULL;
+ if(lastValidInd<0)return NULL;
+ mystr returnRef=NULL;
+ strAdd(&returnRef,strToClear,lastValidInd+1);
+ return returnRef;
 }
 
 mystr c_StringFunctions::getUrlWithoutParams(const mystr url){
-  int i=0;
-  while(url[i]!=STRING_END){
-    if(url[i]==STRING_QUERY_INITPARAMS)break;
-    i++;
+  int returnSize=0;
+  while(url[returnSize]!=STRING_END){
+    if(url[returnSize]==STRING_QUERY_INITPARAMS)break;
+    returnSize++;
   }
-  mystr ret=NULL;
-  strAdd(&ret,url,i);
-  return ret;
+  mystr returnRef=NULL;
+  strAdd(&returnRef,url,returnSize);
+  return returnRef;
 }
 
-mystr c_StringFunctions::strCut(const mystr base,const int size){
- int begin;
- int end;
+mystr c_StringFunctions::strCut(const mystr strToCut,const int size){
+ int newStrInit;
+ int newStrEnd;
  if(size>0){
-  begin=0;
-  end=getStringLen(base)-size;
+  newStrInit=0;
+  newStrEnd=getStringLen(strToCut)-size;
  }else if(size<0){
-  begin=-size;
-  end=getStringLen(base);
-  if(end<=begin)return NULL;
+  newStrInit=-size;
+  newStrEnd=getStringLen(strToCut);
+  if(newStrEnd<=newStrInit)return NULL;
  }else{
   return NULL;
  }
- if(end<=0)return NULL;
+ if(newStrEnd<=0)return NULL;
 
- mystr ret=NULL;
- strAdd(&ret,&base[begin],end);
- return ret;
+ mystr returnRef=NULL;
+ strAdd(&returnRef,&strToCut[newStrInit],newStrEnd);
+ return returnRef;
 }
 
-mystr c_StringFunctions::strCutFree(const mystr base,const int size){
- mystr ret=strCut(base,size);
- if(ret==NULL)return base;
- free(base);
- return ret;
+mystr c_StringFunctions::strCutFree(const mystr strToCut,const int size){
+ mystr returnRef=strCut(strToCut,size);
+ if(returnRef==NULL)return strToCut;
+ free(strToCut);
+ return returnRef;
 }
 
-csvInfo* c_StringFunctions::strToCsvStruct(const mystr data,const char itemLineBreak,const char lineBreak){
- csvInfo *use,*ref=csvCreateStruct();
- use=ref;
- mystr tempVal;
- int initInd,i=0;
- while(data[i]!=STRING_END && (data[i]==itemLineBreak || data[i]==lineBreak))i++;
- while(data[i]!=STRING_END){
-   tempVal=NULL;
-   initInd=i;
-   while(data[i]!=itemLineBreak && data[i]!=lineBreak && data[i]!=STRING_END)i++;
-   if(i-initInd>0)
-    strAdd(&tempVal,(mystr)&data[initInd],i-initInd);
-   if(tempVal!=NULL){
-     if(use->size<1){
-      use->lineInfo=(mystr*)malloc(sizeof(mystr));
+csvInfo* c_StringFunctions::strToCsvStruct(const mystr dataToConvert,const char itemLineBreak,const char lineBreak){
+ csvInfo *currentRef,*returnRef=csvCreateStruct();
+ currentRef=returnRef;
+ mystr tempStr;
+ int strInitInd,i=0;
+ while(dataToConvert[i]!=STRING_END && (dataToConvert[i]==itemLineBreak || dataToConvert[i]==lineBreak))i++;
+ while(dataToConvert[i]!=STRING_END){
+   tempStr=NULL;
+   strInitInd=i;
+   while(dataToConvert[i]!=itemLineBreak && dataToConvert[i]!=lineBreak && dataToConvert[i]!=STRING_END)i++;
+   if(i-strInitInd>0)
+    strAdd(&tempStr,(mystr)&dataToConvert[strInitInd],i-strInitInd);
+   if(tempStr!=NULL){
+     if(currentRef->size<1){
+      currentRef->lineInfo=(mystr*)malloc(sizeof(mystr));
+      currentRef->size=0;
      }else{
-      use->lineInfo=(mystr*)realloc(use->lineInfo,(use->size+1)*sizeof(mystr));
+      currentRef->lineInfo=(mystr*)realloc(currentRef->lineInfo,(currentRef->size+1)*sizeof(mystr));
      }
-     tempVal=trimFree(tempVal);
-     use->lineInfo[use->size]=tempVal;
-     use->size++;
+     if(currentRef->lineInfo==NULL){
+        freeCsvStruct(&returnRef);
+        return NULL;
+     }
+     tempStr=trimFree(tempStr);
+     currentRef->lineInfo[currentRef->size]=tempStr;
+     currentRef->size++;
    }
-   if(data[i]==lineBreak){
+   if(dataToConvert[i]==lineBreak){
     i++;
-   if(data[i]==STRING_END)break;
-    use->next=csvCreateStruct();
-    if(use->next==NULL){
-      freeCsvStruct(&ref);
+    if(dataToConvert[i]==STRING_END)break;
+    currentRef->next=csvCreateStruct();
+    if(currentRef->next==NULL){
+      freeCsvStruct(&returnRef);
       return NULL;
     }
-    use=use->next;
+    currentRef=currentRef->next;
     continue;
    }
 
    i++;
  }
- return ref;
+ return returnRef;
 }
 
 void c_StringFunctions::zeroCsvStruct(csvInfo*info){
+ if(info==NULL)return;
  info->lineInfo=NULL;
  info->next=NULL;
  info->size=0;
 }
 
-mystr c_StringFunctions::csvStructToStr(const csvInfo*info,const char itemLineBreak,const char lineBreak){
- mystr ret=NULL;
- csvInfo *ref=(csvInfo*)info;
- while(ref!=NULL){
-   if(ref->lineInfo==NULL){
-      ref=ref->next;
+mystr c_StringFunctions::csvStructToStr(const csvInfo*csvToConvert,const char itemLineBreak,const char lineBreak){
+ mystr strReturnRef=NULL;
+ csvInfo *currentCsvRef=(csvInfo*)csvToConvert;
+ while(currentCsvRef!=NULL){
+   if(currentCsvRef->lineInfo==NULL){
+      currentCsvRef=currentCsvRef->next;
       continue;
    }
-   for(size_t i=0;i<ref->size;i++){
-     strAdd((mystr*)&ret,ref->lineInfo[i],-1);
-     strAdd((mystr*)&ret,(mystr)&itemLineBreak,1);
+   for(size_t i=0;i<currentCsvRef->size;i++){
+     strAdd((mystr*)&strReturnRef,currentCsvRef->lineInfo[i],-1);
+     strAdd((mystr*)&strReturnRef,(mystr)&itemLineBreak,1);
    }
-   ret=strCutFree(ret,1);
-   strAdd(&ret,(mystr)&lineBreak,1);
-   ref=ref->next;
+   strReturnRef=strCutFree(strReturnRef,1);
+   strAdd(&strReturnRef,(mystr)&lineBreak,1);
+   currentCsvRef=currentCsvRef->next;
  }
- return ret;
+ return strReturnRef;
 }
 
-void c_StringFunctions::freeCsvStruct(csvInfo**info){
-  csvInfo *next,*base=*info;
-  *info=NULL;
-  while(base!=NULL){
-    freeStrArray(&base->lineInfo,base->size);
-    next=base->next;
-    free(base);
-    base=next;
+void c_StringFunctions::freeCsvStruct(csvInfo**csvToFree){
+  if(*csvToFree==NULL)return;
+  csvInfo *nextCsvRef,*currentCsvRef=*csvToFree;
+  *csvToFree=NULL;
+  while(currentCsvRef!=NULL){
+    freeStrArray(&currentCsvRef->lineInfo,currentCsvRef->size);
+    nextCsvRef=currentCsvRef->next;
+    free(currentCsvRef);
+    currentCsvRef=nextCsvRef;
   }
 }
 
@@ -204,32 +210,32 @@ csvInfo* c_StringFunctions::csvStructAdd(ENUM_CSVSTRUCT_ADD addInfo,csvInfo* str
 }
 
 csvInfo* c_StringFunctions::csvCreateStruct(){
- csvInfo *ret=NULL;
- ret=(csvInfo*)malloc(sizeof(csvInfo));
- zeroCsvStruct(ret);
- return ret;
+ csvInfo *returnRef=NULL;
+ returnRef=(csvInfo*)malloc(sizeof(csvInfo));
+ zeroCsvStruct(returnRef);
+ return returnRef;
 }
 
 
-csvInfo* c_StringFunctions::csvCopyStruct(const csvInfo*base){
- if(base==NULL)return NULL;
+csvInfo* c_StringFunctions::csvCopyStruct(const csvInfo*source){
+ if(source==NULL)return NULL;
  csvInfo*ret=csvCreateStruct();
  if(ret==NULL)return NULL;
- ret->lineInfo=copyStrArray(base->lineInfo,base->size);
- ret->next=base->next;
- ret->size=base->size;
+ ret->lineInfo=copyStrArray(source->lineInfo,source->size);
+ ret->next=source->next;
+ ret->size=source->size;
  return ret;
 }
 
-mystr* c_StringFunctions::copyStrArray(const mystr*base,const int size){
- mystr *ret=NULL;
- if(base==NULL)return NULL;
+mystr* c_StringFunctions::copyStrArray(const mystr*source,const int size){
+ mystr *returnRef=NULL;
+ if(source==NULL)return NULL;
  if(size<1)return NULL;
- ret=(mystr*)malloc(size*sizeof(mystr));
+ returnRef=(mystr*)malloc(size*sizeof(mystr));
  for(int i=0;i<size;i++){
-  ret[i]=copyStr(base[i],NULL);
+  returnRef[i]=copyStr(source[i],NULL);
  }
- return ret;
+ return returnRef;
 }
 
 void c_StringFunctions::freeStrArray(mystr **str,const int size){
@@ -241,39 +247,37 @@ void c_StringFunctions::freeStrArray(mystr **str,const int size){
  *str=NULL;
 }
 
-int c_StringFunctions::copyNcsvInfo(csvInfo**ref,csvInfo*base,const int ncopy){
+int c_StringFunctions::copyNcsvInfo(csvInfo**destination,csvInfo*source,const int ncopy){
  if(ncopy<1)return 0;
- if(base==NULL)return 0;
- csvInfo *copyBase=base;
+ if(source==NULL)return 0;
+ csvInfo *sourceLastRef=source;
   int cncopy=0;
- if(*ref==NULL){
-    *ref=csvCopyStruct(base);
-    if(*ref==NULL)return 0;
-    copyBase=copyBase->next;
-    (*ref)->next=NULL;
+ if(*destination==NULL){
+    *destination=csvCopyStruct(source);
+    if(*destination==NULL)return 0;
+    sourceLastRef=sourceLastRef->next;
+    (*destination)->next=NULL;
     cncopy++;
  }
- csvInfo *lastAdd=*ref;
- while(lastAdd!=NULL){
-    if(lastAdd->next==NULL)break;
-    lastAdd=lastAdd->next;
+ csvInfo *destinationLastRef=*destination;
+ while(destinationLastRef!=NULL){
+    if(destinationLastRef->next==NULL)break;
+    destinationLastRef=destinationLastRef->next;
  }
- copyBase=base;
 
-
- while(copyBase!=NULL){
+ while(sourceLastRef!=NULL){
   if(cncopy>=ncopy)break;
-  lastAdd->next=csvCopyStruct(copyBase);
-  if(lastAdd->next==NULL){
-    freeCsvStruct(ref);
+  destinationLastRef->next=csvCopyStruct(sourceLastRef);
+  if(destinationLastRef->next==NULL){
+    freeCsvStruct(destination);
     return 0;
   }
-  lastAdd=lastAdd->next;
-  copyBase=copyBase->next;
+  destinationLastRef=destinationLastRef->next;
+  sourceLastRef=sourceLastRef->next;
   cncopy++;
  }
- if(lastAdd!=NULL)
-  lastAdd->next=NULL;
+ if(destinationLastRef!=NULL)
+  destinationLastRef->next=NULL;
  return cncopy;
 };
 
